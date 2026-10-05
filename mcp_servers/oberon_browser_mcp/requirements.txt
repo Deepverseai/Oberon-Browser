@@ -1,0 +1,2 @@
+# Oberon Browser MCP Server Bridge Requirements
+requests>=2.28.0
