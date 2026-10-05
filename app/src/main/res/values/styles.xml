@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Application Theme -->
+    <style name="Theme.OberonBrowser" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/accent_platinum</item>
+        <item name="colorPrimaryVariant">@color/charcoal_surface</item>
+        <item name="colorOnPrimary">@color/obsidian_base</item>
+        <item name="colorSecondary">@color/accent_sage</item>
+        <item name="colorSecondaryVariant">@color/accent_sage_subtle</item>
+        <item name="colorOnSecondary">@color/obsidian_base</item>
+        <item name="android:colorBackground">@color/obsidian_base</item>
+        <item name="colorSurface">@color/charcoal_surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+
+        <!-- Status Bar and Navigation Bar -->
+        <item name="android:statusBarColor">@color/obsidian_base</item>
+        <item name="android:navigationBarColor">@color/obsidian_base</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- Bottom Sheet Dialog Theme -->
+    <style name="BottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetModalStyle</item>
+    </style>
+
+    <style name="BottomSheetModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@color/charcoal_surface</item>
+    </style>
+</resources>
