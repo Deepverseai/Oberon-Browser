@@ -30,7 +30,7 @@
         android:layout_weight="1"
         android:background="@null"
         android:completionThreshold="1"
-        android:dropDownBackgroundTint="@color/charcoal_surface"
+        android:popupBackground="@color/charcoal_surface"
         android:hint="@string/search_hint"
         android:imeOptions="actionGo|flagNoExtractUi"
         android:inputType="textUri|textAutoComplete"

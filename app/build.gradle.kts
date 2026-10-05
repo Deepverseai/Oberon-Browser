@@ -56,6 +56,7 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.webkit:webkit:1.10.0")
+    implementation("androidx.gridlayout:gridlayout:1.0.0")
 
     // Ultra-lightweight embedded agent server (~56KB)
     implementation("org.nanohttpd:nanohttpd:2.3.1")
