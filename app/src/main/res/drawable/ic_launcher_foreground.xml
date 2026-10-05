@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Outer Orbital Ring -->
+    <path
+        android:strokeColor="#6EE7B7"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:pathData="M 54,28 A 26,26 0 1,1 53.9,28" />
+
+    <!-- Inner Core Planet / Compass -->
+    <path
+        android:fillColor="#F3F4F6"
+        android:pathData="M 54,38 A 16,16 0 1,1 53.9,38" />
+
+    <!-- Center Agentic Dot -->
+    <path
+        android:fillColor="#090A0B"
+        android:pathData="M 54,50 A 4,4 0 1,1 53.9,50" />
+</vector>
