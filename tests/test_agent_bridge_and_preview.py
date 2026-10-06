@@ -71,5 +71,17 @@ class TestAgentBridgeAndPreview(unittest.TestCase):
         self.assertIn("glideCursor", cursor_code)
         self.assertIn("showClickRipple", cursor_code)
 
+    def test_main_activity_agent_bridge_integration(self):
+        main_kt = os.path.join(REPO_ROOT, "app", "src", "main", "java", "com", "antigravity", "oberon", "MainActivity.kt")
+        with open(main_kt, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        self.assertIn("AgentServer", content)
+        self.assertIn("AutomationProtocol", content)
+        self.assertIn("agentServer?.start()", content)
+        self.assertIn("agentServer?.stop()", content)
+        self.assertIn("onNewIntent", content)
+        self.assertIn("previewModeManager", content)
+
 if __name__ == "__main__":
     unittest.main()

@@ -20,10 +20,14 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.antigravity.oberon.agent.AgentServer
+import com.antigravity.oberon.agent.AutomationProtocol
 import com.antigravity.oberon.browser.FileUploaderManager
 import com.antigravity.oberon.browser.OberonChromeClient
 import com.antigravity.oberon.browser.OberonClient
 import com.antigravity.oberon.browser.SslSecurityManager
+import com.antigravity.oberon.preview.PreviewMode
+import com.antigravity.oberon.preview.PreviewModeManager
 import com.antigravity.oberon.search.OmniboxClassifier
 import com.antigravity.oberon.search.SearchEngineManager
 import com.antigravity.oberon.search.SuggestionsClient
@@ -38,6 +42,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tabManager: TabManager
     private lateinit var searchEngineManager: SearchEngineManager
     private lateinit var fileUploaderManager: FileUploaderManager
+    private lateinit var previewModeManager: PreviewModeManager
+    private var agentServer: AgentServer? = null
 
     private lateinit var webViewContainer: FrameLayout
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -66,12 +72,33 @@ class MainActivity : AppCompatActivity() {
         tabManager = TabManager()
         searchEngineManager = SearchEngineManager(this)
         fileUploaderManager = FileUploaderManager(this)
+        previewModeManager = PreviewModeManager(this)
 
         initViews()
         setupOmnibox()
         setupNavigationControls()
         setupTabManager()
         setupBackPressedHandler()
+
+        // Embedded AgentServer for Antigravity CLI and autonomous automation
+        try {
+            val protocol = AutomationProtocol(
+                tabManager = tabManager,
+                previewModeManager = previewModeManager,
+                onNewTab = { newUrl ->
+                    runOnUiThread {
+                        val newTab = tabManager.createTab(newUrl, isIncognito = false) { incog ->
+                            createConfiguredWebView(incog)
+                        }
+                        newTab.webView.loadUrl(newUrl)
+                    }
+                }
+            )
+            agentServer = AgentServer(protocol)
+            agentServer?.start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
         // Handle incoming intent URL or create initial tab
         val initialUrl = intent?.dataString ?: "https://www.google.com"
@@ -207,6 +234,14 @@ class MainActivity : AppCompatActivity() {
                 newTab.webView.loadUrl("https://www.google.com")
             }
             sheet.show(supportFragmentManager, "TabSwitcherSheet")
+        }
+
+        btnPreviewMode.setOnClickListener {
+            val activeTab = tabManager.getActiveTab() ?: return@setOnClickListener
+            val currentMode = previewModeManager.getMode()
+            val newMode = if (currentMode == PreviewMode.WEBSITE) PreviewMode.APP else PreviewMode.WEBSITE
+            previewModeManager.setPreviewMode(newMode, activeTab.webView, webViewContainer)
+            android.widget.Toast.makeText(this, "Preview Mode: ${newMode.name}", android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -351,6 +386,24 @@ class MainActivity : AppCompatActivity() {
                 omniboxInput.setText(spokenText)
                 loadInput(spokenText)
             }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val incomingUrl = intent?.dataString
+        if (!incomingUrl.isNullOrEmpty()) {
+            tabManager.getActiveTab()?.webView?.loadUrl(incomingUrl)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        try {
+            agentServer?.stop()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
